@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Val Magazine — Catálogo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <!-- logo: arquivo na raiz do site -->
+        <img src="logovalfundo.jpg.png" alt="Val Magazine" class="brand-logo" />
+        <div class="brand-text">Val Magazine</div>
+      </div>
+
+      <nav class="top-links" aria-label="redes e carrinho">
+        <a class="social" href="https://wa.me/5577981543503" target="_blank" rel="noopener" aria-label="WhatsApp Val Magazine">
+          <span class="icon">📱</span><span class="link-text">WhatsApp</span>
+        </a>
+        <a class="social" href="https://www.instagram.com/valmagazinecle?igsh=NjNvZzlwOWM3d2J6" target="_blank" rel="noopener" aria-label="Instagram Val Magazine">
+          <span class="icon">📸</span><span class="link-text">Instagram</span>
+        </a>
+
+        <button id="cart-btn" class="cart-btn" aria-label="Abrir carrinho">
+          🛒 <span id="cart-count" class="cart-count">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Pesquisar produtos..." aria-label="Pesquisar produtos">
+      </div>
+
+      <div class="filters-wrap" aria-label="Filtros por categoria">
+        <select id="category-filter" aria-label="Filtrar por categoria">
+          <option value="Todos">Todos</option>
+          <option>Bolsas</option>
+          <option>Eletrônicos</option>
+          <option>Brinquedos</option>
+          <option>Hot</option>
+          <option>Kit/Cestas</option>
+          <option>Acessórios</option>
+          <option>Canecas</option>
+          <option>Pelúcias</option>
+          <option>Avatim</option>
+          <option>Casa/Decoração</option>
+          <option>Difusores</option>
+          <option>Relógios</option>
+          <option>Utensílios</option>
+          <option>Outros</option>
+        </select>
+      </div>
+    </section>
+
+    <section id="products-grid" class="products-grid" aria-live="polite">
+      <!-- produtos renderizados via script.js -->
+    </section>
+  </main>
+
+  <!-- Carrinho lateral -->
+  <aside id="cart-drawer" class="cart-drawer" aria-hidden="true" aria-label="Carrinho">
+    <div class="cart-header">
+      <h3>Seu Carrinho</h3>
+      <button id="close-cart" aria-label="Fechar carrinho">✕</button>
+    </div>
+
+    <div id="cart-items" class="cart-items" role="region" aria-live="polite">
+      <!-- items -->
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total">Total: R$ <span id="cart-total">0.00</span></div>
+      <div class="cart-actions">
+        <button id="clear-cart" class="btn ghost" aria-label="Limpar carrinho">Limpar</button>
+        <button id="checkout" class="btn primary" aria-label="Finalizar via WhatsApp">Finalizar via WhatsApp</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Modal de imagem -->
+  <div id="img-modal" class="img-modal" aria-hidden="true">
+    <div class="img-modal-content">
+      <button id="close-modal" aria-label="Fechar imagem">✕</button>
+      <img id="modal-image" src="" alt="">
+      <div id="modal-caption" class="modal-caption"></div>
+    </div>
+  </div>
+
+  <!-- WhatsApp flutuante -->
+  <a id="whatsapp-float" class="whatsapp-float" href="https://wa.me/5577981543503" target="_blank" rel="noopener" aria-label="WhatsApp Val Magazine">
+    💬
+  </a>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>© <span id="year"></span> Val Magazine</div>
+      <div>Todos os direitos reservados.</div>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
