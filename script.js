@@ -1,12 +1,12 @@
 let carrinho = [];
-let produtosGlobal = []; // aqui você vai carregar seu JSON
+let produtosGlobal = [];
 
 // Normalizar texto
 function normalizarTexto(txt) {
   return String(txt || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 }
 
-// Criar card
+// Criar card de produto
 function criarCard(produto) {
   const card = document.createElement('div');
   card.className = 'product-card';
@@ -26,11 +26,20 @@ function renderProdutos(produtos) {
   produtos.forEach(p => container.appendChild(criarCard(p)));
 }
 
+// 🔹 Carregar produtos do JSON
+fetch("products.json")
+  .then(res => res.json())
+  .then(data => {
+    produtosGlobal = data;
+    renderProdutos(produtosGlobal);
+  })
+  .catch(err => console.error("Erro ao carregar produtos:", err));
+
 // Filtro por categoria
 document.querySelectorAll('.category').forEach(btn => {
   btn.addEventListener('click', () => {
     const cat = btn.getAttribute('data-category');
-    if(cat === 'all') renderProdutos(produtosGlobal);
+    if (cat === 'all') renderProdutos(produtosGlobal);
     else renderProdutos(produtosGlobal.filter(p => p.categoria === cat));
   });
 });
@@ -42,7 +51,7 @@ document.getElementById('search').addEventListener('input', (e) => {
   renderProdutos(filtrados);
 });
 
-// Carrinho
+// Atualizar carrinho
 function atualizarCarrinho() {
   document.getElementById('cart-count').innerText = carrinho.length;
   const cartItems = document.getElementById('cart-items');
@@ -68,9 +77,8 @@ document.getElementById('close-cart').addEventListener('click', () => {
 // Modal Produto
 let produtoModal = null;
 document.addEventListener('click', (e) => {
-  if(e.target.tagName === 'IMG' && e.target.closest('.product-card')) {
+  if (e.target.tagName === 'IMG' && e.target.closest('.product-card')) {
     const nome = e.target.dataset.name;
-    const preco = e.target.dataset.price;
     produtoModal = produtosGlobal.find(p => p.nome === nome);
     document.getElementById('modal-img').src = produtoModal.imagem;
     document.getElementById('modal-name').innerText = produtoModal.nome;
@@ -91,7 +99,7 @@ document.getElementById('modal-add-cart').addEventListener('click', () => {
 
 // Finalizar no WhatsApp
 document.getElementById('checkout-btn').addEventListener('click', () => {
-  if(carrinho.length === 0) return alert('Carrinho vazio!');
+  if (carrinho.length === 0) return alert('Carrinho vazio!');
   let mensagem = 'Olá, quero comprar:%0A';
   carrinho.forEach(p => mensagem += `${p.nome} - R$ ${p.preco.toFixed(2)}%0A`);
   window.open(`https://wa.me/5547996000358?text=${mensagem}`, '_blank');
