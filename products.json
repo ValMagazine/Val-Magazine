@@ -1,6 +1,6 @@
 [
-  { "nome": "Bolsa c/ Corrente Dourada", "preco": 55.90, "imagem": "bolsacorrentedourada.jpg", "categoria": "bolsas" },
-  { "nome": "Caneca Time (Vasco)", "preco": 39.50, "imagem": "canecavasco.jpg", "categoria": "canecas" },
+  { "nome": "Bolsa c/ Corrente Dourada", "preco": 55.90, "imagem": "bolsacorrentedourada.jpg.jpeg", "categoria": "bolsas" },
+  { "nome": "Caneca Time (Vasco)", "preco": 39.50, "imagem": "canecavasco.jpeg", "categoria": "canecas" },
   { "nome": "Carrinho Police Security Nova Toys", "preco": 38.50, "imagem": "carrinhopolicia.jpeg", "categoria": "brinquedos" },
   { "nome": "Kit Sensual", "preco": 99.90, "imagem": "hot1.jpg", "categoria": "hot" },
   { "nome": "Kit Dia dos Pais", "preco": 116.90, "imagem": "cestapais.jpeg", "categoria": "cestas" },
