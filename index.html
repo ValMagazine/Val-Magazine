@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VAL Magazine — Catálogo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <img src="logovalfundo.jpg.png" alt="VAL Magazine" class="logo" />
+        <div class="brand-text">
+          <h1>VAL Magazine</h1>
+          <p>Decore, facilite, presenteie e emocione</p>
+        </div>
+      </div>
+      <div class="controls">
+        <input id="search" type="search" placeholder="Buscar produtos..." aria-label="Buscar produtos" />
+        <button id="cart-btn" class="btn icon-btn" title="Carrinho">
+          🛒 <span id="cart-count" class="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+    <nav class="categories container">
+      <ul id="category-list">
+        <li data-cat="todos" class="active">Todos</li>
+        <li data-cat="outros">Outros</li>
+        <li data-cat="acessorios">Acessórios</li>
+        <li data-cat="avatim">Avatim</li>
+        <li data-cat="bolsas">Bolsas</li>
+        <li data-cat="brinquedos">Brinquedos</li>
+        <li data-cat="canecas">Canecas</li>
+        <li data-cat="casa/decoracao">Casa/Decoração</li>
+        <li data-cat="cestas">Cestas</li>
+        <li data-cat="difusores">Difusores</li>
+        <li data-cat="eletronicos">Eletrônicos</li>
+        <li data-cat="hot">Hot</li>
+        <li data-cat="pelucias">Pelúcias</li>
+        <li data-cat="relogios">Relógios</li>
+        <li data-cat="utensilios">Utensílios</li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="catalog">
+      <div id="products-grid" class="grid"></div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
