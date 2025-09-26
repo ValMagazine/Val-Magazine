@@ -1,5 +1,5 @@
 // ======================= CONFIGURAÇÃO =======================
-const JSON_URL = "https://script.google.com/macros/s/AKfycbxgkvO8bVl0YlMxBubq0d6tEcwvWDAvPcLDHXzdDl9d/dev";
+const JSON_URL = "https://script.google.com/macros/s/AKfycbxgkvO8bVl0YlMxBubq0d6tEcwvWDAvPcLDHXzdDl9d/dev?callback=handleProducts";
 
 const productsGrid = document.getElementById("products-grid");
 const searchInput = document.getElementById("search");
@@ -36,7 +36,6 @@ function formatDriveLink(url) {
 
 // Renderiza produtos no grid
 function renderProducts(items) {
-  products = items; // atualiza produtos globais
   productsGrid.innerHTML = "";
   if(items.length === 0){
     productsGrid.innerHTML = "<p style='color:var(--muted)'>Nenhum produto encontrado.</p>";
@@ -61,7 +60,6 @@ function renderProducts(items) {
     `;
     productsGrid.appendChild(card);
 
-    // Modal de imagem
     card.querySelector(".product-media img").addEventListener("click", () => {
       modalImage.src = imgLink;
       modalCaption.textContent = prod.Nome;
@@ -69,18 +67,10 @@ function renderProducts(items) {
       imgModal.setAttribute("aria-hidden","false");
     });
 
-    // Botão adicionar ao carrinho
     card.querySelector(".add-to-cart").addEventListener("click", () => {
       addToCart(prod);
     });
   });
-}
-
-// ======================= JSONP =======================
-function fetchProductsJSONP() {
-  const script = document.createElement("script");
-  script.src = `${JSON_URL}?callback=renderProducts`;
-  document.body.appendChild(script);
 }
 
 // ======================= FILTRO E BUSCA =======================
@@ -188,5 +178,19 @@ closeModalBtn.addEventListener("click", () => {
   imgModal.setAttribute("aria-hidden","true");
 });
 
+// ======================= JSONP =======================
+function fetchProducts() {
+  const script = document.createElement("script");
+  script.src = JSON_URL;
+  script.async = true;
+  document.body.appendChild(script);
+}
+
+// Função chamada pelo JSONP
+function handleProducts(data) {
+  products = data;
+  renderProducts(products);
+}
+
 // ======================= INICIALIZAÇÃO =======================
-fetchProductsJSONP();
+fetchProducts();
