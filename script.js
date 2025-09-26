@@ -1,5 +1,5 @@
 // ======================= CONFIGURAÇÃO =======================
-const JSON_URL = "https://script.google.com/macros/s/AKfycbyw9YMVZlg9ivdbXhxLXUnk1gj5WqiOtj2Im1_rT2KETid00cLtp3X_rDK7GeMrJ_6G/exec";
+const JSON_URL = "https://script.google.com/macros/s/AKfycbxgkvO8bVl0YlMxBubq0d6tEcwvWDAvPcLDHXzdDl9d/dev";
 
 const productsGrid = document.getElementById("products-grid");
 const searchInput = document.getElementById("search");
@@ -35,7 +35,7 @@ function formatDriveLink(url) {
 }
 
 // Renderiza produtos no grid
-function renderProducts(items) {
+function renderProductsGrid(items) {
   productsGrid.innerHTML = "";
   if(items.length === 0){
     productsGrid.innerHTML = "<p style='color:var(--muted)'>Nenhum produto encontrado.</p>";
@@ -75,18 +75,18 @@ function renderProducts(items) {
   });
 }
 
-// Buscar produtos do Apps Script
-async function fetchProducts() {
-  try {
-    const response = await fetch(JSON_URL);
-    const data = await response.json();
-    products = data;
-    renderProducts(products);
-  } catch (err) {
-    console.error("Erro ao carregar produtos:", err);
-    productsGrid.innerHTML = "<p style='color:red'>Erro ao carregar produtos.</p>";
-  }
+// ======================= BUSCA DE PRODUTOS VIA JSONP =======================
+function renderProducts(data) {
+  // Essa função é chamada pelo callback do Apps Script
+  products = data;
+  renderProductsGrid(products);
 }
+
+(function loadProducts() {
+  const script = document.createElement('script');
+  script.src = JSON_URL + '?callback=renderProducts';
+  document.body.appendChild(script);
+})();
 
 // ======================= FILTRO E BUSCA =======================
 categoryFilter.addEventListener("change", () => {
@@ -107,7 +107,7 @@ function filterAndSearch() {
     return matchCat && matchSearch;
   });
 
-  renderProducts(filtered);
+  renderProductsGrid(filtered);
 }
 
 // ======================= CARRINHO =======================
@@ -148,7 +148,6 @@ function updateCart() {
     const priceNum = parseFloat(item.Preço.replace(",","."));
     total += priceNum * item.quantidade;
 
-    // Botões +
     div.querySelector(".plus").addEventListener("click", () => {
       item.quantidade++;
       updateCart();
@@ -199,6 +198,3 @@ closeModalBtn.addEventListener("click", () => {
   imgModal.classList.remove("show");
   imgModal.setAttribute("aria-hidden","true");
 });
-
-// ======================= INICIALIZAÇÃO =======================
-fetchProducts();
