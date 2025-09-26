@@ -1,0 +1,19 @@
+backend:
+  name: github
+  repo: ValMagazine/Val-Magazine
+  branch: cms # a branch que você criou
+
+media_folder: "assets/images" # onde as imagens vão ser guardadas no repositório
+public_folder: "/assets/images" # como as imagens aparecem no site
+
+collections:
+  - name: "products"
+    label: "Produtos"
+    folder: "content/products"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nome", name: "name", widget: "string" }
+      - { label: "Categoria", name: "category", widget: "string" }
+      - { label: "Preço", name: "price", widget: "string" }
+      - { label: "Imagem", name: "image", widget: "image" }
