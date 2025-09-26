@@ -1,5 +1,6 @@
 // ======================= CONFIGURAÇÃO =======================
-const JSONP_URL = "https://script.google.com/macros/s/AKfycbxgkvO8bVl0YlMxBubq0d6tEcwvWDAvPcLDHXzdDl9d/dev";
+const JSON_URL = "https://script.google.com/macros/s/AKfycbxgkvO8bVl0YlMxBubq0d6tEcwvWDAvPcLDHXzdDl9d/dev";
+
 const productsGrid = document.getElementById("products-grid");
 const searchInput = document.getElementById("search");
 const categoryFilter = document.getElementById("category-filter");
@@ -30,11 +31,12 @@ function formatDriveLink(url) {
   if (match && match[1]) {
     return `https://drive.google.com/uc?export=view&id=${match[1]}`;
   }
-  return url; // Se não for link de Drive, retorna original
+  return url;
 }
 
 // Renderiza produtos no grid
 function renderProducts(items) {
+  products = items; // atualiza produtos globais
   productsGrid.innerHTML = "";
   if(items.length === 0){
     productsGrid.innerHTML = "<p style='color:var(--muted)'>Nenhum produto encontrado.</p>";
@@ -43,6 +45,7 @@ function renderProducts(items) {
 
   items.forEach(prod => {
     const imgLink = formatDriveLink(prod.Imagem);
+
     const card = document.createElement("div");
     card.classList.add("product-card");
     card.innerHTML = `
@@ -73,18 +76,11 @@ function renderProducts(items) {
   });
 }
 
-// ======================= BUSCA JSONP =======================
-function loadProductsJSONP() {
+// ======================= JSONP =======================
+function fetchProductsJSONP() {
   const script = document.createElement("script");
-  const callbackName = "handleProductsJSONP";
-  script.src = `${JSONP_URL}?callback=${callbackName}`;
+  script.src = `${JSON_URL}?callback=renderProducts`;
   document.body.appendChild(script);
-}
-
-// Função de callback chamada pelo JSONP
-function handleProductsJSONP(data) {
-  products = data;
-  renderProducts(products);
 }
 
 // ======================= FILTRO E BUSCA =======================
@@ -110,7 +106,7 @@ function addToCart(prod) {
   if(exist){
     exist.quantidade++;
   } else {
-    cart.push({...prod, quantidade:1});
+    cart.push({...prod, quantidade: 1});
   }
   updateCart();
   openCart();
@@ -122,6 +118,7 @@ function updateCart() {
 
   cart.forEach(item => {
     const imgLink = formatDriveLink(item.Imagem);
+
     const div = document.createElement("div");
     div.classList.add("cart-item");
     div.innerHTML = `
@@ -147,7 +144,9 @@ function updateCart() {
     });
     div.querySelector(".minus").addEventListener("click", () => {
       item.quantidade--;
-      if(item.quantidade <= 0) cart = cart.filter(i=>i.Nome!==item.Nome);
+      if(item.quantidade <= 0){
+        cart = cart.filter(i => i.Nome !== item.Nome);
+      }
       updateCart();
     });
   });
@@ -168,9 +167,11 @@ function closeCart() {
 
 cartBtn.addEventListener("click", openCart);
 closeCartBtn.addEventListener("click", closeCart);
-clearCartBtn.addEventListener("click", () => { cart=[]; updateCart(); });
+clearCartBtn.addEventListener("click", () => {
+  cart = [];
+  updateCart();
+});
 
-// Finalizar via WhatsApp
 checkoutBtn.addEventListener("click", () => {
   if(cart.length === 0) return;
   let msg = "Olá! Quero comprar:\n";
@@ -188,4 +189,4 @@ closeModalBtn.addEventListener("click", () => {
 });
 
 // ======================= INICIALIZAÇÃO =======================
-loadProductsJSONP();
+fetchProductsJSONP();
