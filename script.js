@@ -9,17 +9,38 @@ function handleProducts(data) {
     displayProducts(products);
 }
 
+// Corrige links do Google Drive
+function formatDriveLink(url) {
+    if (!url) return "img/placeholder.png";
+
+    // Caso o link seja ".../d/ID/..."
+    let match = url.match(/\/d\/([^/]+)\//);
+    if (match && match[1]) {
+        return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    }
+
+    // Caso o link seja "...?id=ID"
+    match = url.match(/id=([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+        return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    }
+
+    return url;
+}
+
 // Exibir os produtos
 function displayProducts(products) {
     const container = document.getElementById("product-list");
     container.innerHTML = "";
 
     products.forEach(product => {
+        const imgLink = formatDriveLink(product.Imagem);
+
         const card = document.createElement("div");
         card.classList.add("product-card");
 
         card.innerHTML = `
-            <img src="${product.Imagem}" alt="${product.Nome}" class="product-image" onerror="this.src='img/placeholder.png'">
+            <img src="${imgLink}" alt="${product.Nome}" class="product-image" onerror="this.src='img/placeholder.png'">
             <h3>${product.Nome}</h3>
             <p>${product.Categoria}</p>
             <span>R$ ${parseFloat(product.Preço).toFixed(2)}</span>
