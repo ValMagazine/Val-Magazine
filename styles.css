@@ -51,6 +51,18 @@ body{
 }
 .social:hover{color:var(--accent);background:rgba(127,200,255,0.06)}
 
+/* Instagram ícone */
+.instagram-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: transform .2s ease;
+}
+
+.social:hover .instagram-icon {
+  transform: scale(1.1);
+}
+
 /* Cart */
 .cart-btn{
   background:transparent;
