@@ -1,5 +1,5 @@
 // ======================= CONFIGURAÇÃO =======================
-const JSON_URL = "https://script.google.com/macros/s/AKfycbxgkvO8bVl0YlMxBubq0d6tEcwvWDAvPcLDHXzdDl9d/dev?callback=callback"; // link do seu Web App com callback
+const JSON_URL = "https://script.google.com/macros/s/AKfycbxgkvO8bVl0YlMxBubq0d6tEcwvWDAvPcLDHXzdDl9d/dev";
 
 const productsGrid = document.getElementById("products-grid");
 const searchInput = document.getElementById("search");
@@ -31,7 +31,7 @@ function formatDriveLink(url) {
   if (match && match[1]) {
     return `https://drive.google.com/uc?export=view&id=${match[1]}`;
   }
-  return url;
+  return url; // Se não for link de Drive, retorna original
 }
 
 // Renderiza produtos no grid
@@ -44,6 +44,7 @@ function renderProducts(items) {
 
   items.forEach(prod => {
     const imgLink = formatDriveLink(prod.Imagem);
+
     const card = document.createElement("div");
     card.classList.add("product-card");
     card.innerHTML = `
@@ -59,6 +60,7 @@ function renderProducts(items) {
     `;
     productsGrid.appendChild(card);
 
+    // Modal de imagem
     card.querySelector(".product-media img").addEventListener("click", () => {
       modalImage.src = imgLink;
       modalCaption.textContent = prod.Nome;
@@ -66,17 +68,24 @@ function renderProducts(items) {
       imgModal.setAttribute("aria-hidden","false");
     });
 
+    // Botão adicionar ao carrinho
     card.querySelector(".add-to-cart").addEventListener("click", () => {
       addToCart(prod);
     });
   });
 }
 
-// ======================= JSONP =======================
-
-function callback(data) {
-  products = data;
-  renderProducts(products);
+// Buscar produtos do Apps Script
+async function fetchProducts() {
+  try {
+    const response = await fetch(JSON_URL);
+    const data = await response.json();
+    products = data;
+    renderProducts(products);
+  } catch (err) {
+    console.error("Erro ao carregar produtos:", err);
+    productsGrid.innerHTML = "<p style='color:red'>Erro ao carregar produtos.</p>";
+  }
 }
 
 // ======================= FILTRO E BUSCA =======================
@@ -99,8 +108,11 @@ function filterAndSearch() {
 // ======================= CARRINHO =======================
 function addToCart(prod) {
   const exist = cart.find(item => item.Nome === prod.Nome);
-  if(exist) exist.quantidade++;
-  else cart.push({...prod, quantidade:1});
+  if(exist){
+    exist.quantidade++;
+  } else {
+    cart.push({...prod, quantidade: 1});
+  }
   updateCart();
   openCart();
 }
@@ -111,6 +123,7 @@ function updateCart() {
 
   cart.forEach(item => {
     const imgLink = formatDriveLink(item.Imagem);
+
     const div = document.createElement("div");
     div.classList.add("cart-item");
     div.innerHTML = `
@@ -130,10 +143,16 @@ function updateCart() {
     const priceNum = parseFloat(item.Preço.replace(",","."));
     total += priceNum * item.quantidade;
 
-    div.querySelector(".plus").addEventListener("click", () => { item.quantidade++; updateCart(); });
+    // Botões +
+    div.querySelector(".plus").addEventListener("click", () => {
+      item.quantidade++;
+      updateCart();
+    });
     div.querySelector(".minus").addEventListener("click", () => {
       item.quantidade--;
-      if(item.quantidade <= 0) cart = cart.filter(i => i.Nome !== item.Nome);
+      if(item.quantidade <= 0){
+        cart = cart.filter(i => i.Nome !== item.Nome);
+      }
       updateCart();
     });
   });
@@ -154,13 +173,18 @@ function closeCart() {
 
 cartBtn.addEventListener("click", openCart);
 closeCartBtn.addEventListener("click", closeCart);
-clearCartBtn.addEventListener("click", () => { cart=[]; updateCart(); });
+clearCartBtn.addEventListener("click", () => {
+  cart = [];
+  updateCart();
+});
 
 // Finalizar via WhatsApp
 checkoutBtn.addEventListener("click", () => {
-  if(cart.length===0) return;
+  if(cart.length === 0) return;
   let msg = "Olá! Quero comprar:\n";
-  cart.forEach(item => { msg += `- ${item.Nome} x${item.quantidade} - R$ ${item.Preço}\n`; });
+  cart.forEach(item => {
+    msg += `- ${item.Nome} x${item.quantidade} - R$ ${item.Preço}\n`;
+  });
   const url = "https://wa.me/5577981543503?text=" + encodeURIComponent(msg);
   window.open(url,"_blank");
 });
@@ -170,3 +194,6 @@ closeModalBtn.addEventListener("click", () => {
   imgModal.classList.remove("show");
   imgModal.setAttribute("aria-hidden","true");
 });
+
+// ======================= INICIALIZAÇÃO =======================
+fetchProducts();
