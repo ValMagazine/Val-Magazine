@@ -24,6 +24,16 @@ let cart = [];
 
 // ======================= FUNÇÕES =======================
 
+// Corrige links do Google Drive para exibição direta
+function formatDriveLink(url) {
+  if (!url) return "";
+  const match = url.match(/id=([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+  }
+  return url; // Se não for link de Drive, retorna original
+}
+
 // Renderiza produtos no grid
 function renderProducts(items) {
   productsGrid.innerHTML = "";
@@ -33,11 +43,13 @@ function renderProducts(items) {
   }
 
   items.forEach(prod => {
+    const imgLink = formatDriveLink(prod.Imagem);
+
     const card = document.createElement("div");
     card.classList.add("product-card");
     card.innerHTML = `
       <div class="product-media">
-        <img src="${prod.Imagem}" alt="${prod.Nome}">
+        <img src="${imgLink}" alt="${prod.Nome}">
       </div>
       <div class="product-title">${prod.Nome}</div>
       <div class="product-category">${prod.Categoria || "Sem categoria"}</div>
@@ -50,7 +62,7 @@ function renderProducts(items) {
 
     // Modal de imagem
     card.querySelector(".product-media img").addEventListener("click", () => {
-      modalImage.src = prod.Imagem;
+      modalImage.src = imgLink;
       modalCaption.textContent = prod.Nome;
       imgModal.classList.add("show");
       imgModal.setAttribute("aria-hidden","false");
@@ -77,7 +89,6 @@ async function fetchProducts() {
 }
 
 // ======================= FILTRO E BUSCA =======================
-
 categoryFilter.addEventListener("change", () => {
   filterAndSearch();
 });
@@ -100,7 +111,6 @@ function filterAndSearch() {
 }
 
 // ======================= CARRINHO =======================
-
 function addToCart(prod) {
   const exist = cart.find(item => item.Nome === prod.Nome);
   if(exist){
@@ -117,10 +127,12 @@ function updateCart() {
   let total = 0;
 
   cart.forEach(item => {
+    const imgLink = formatDriveLink(item.Imagem);
+
     const div = document.createElement("div");
     div.classList.add("cart-item");
     div.innerHTML = `
-      <img src="${item.Imagem}" alt="${item.Nome}">
+      <img src="${imgLink}" alt="${item.Nome}">
       <div>
         <div>${item.Nome}</div>
         <div>R$ ${item.Preço}</div>
